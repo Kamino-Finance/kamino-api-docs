@@ -2976,6 +2976,7 @@ Get all instructions for the specified KVault shareholder.
 ```
 
 Example request:
+
 - https://api.kamino.finance/kvaults/shareholders/2frn6q2bDmfiGDnaiSFWqoJBm77fMHpGVnUV9yKYa7ts/transactions?env=mainnet-beta
 
 Example response:
@@ -3009,6 +3010,44 @@ Example response:
 ]
 ```
 
+#### Get all kvault allocation transactions
+
+Get all allocation transactions (`invest` ixs) for the specified KVault.
+Positive token amounts represent deposits, negative mean withdraws from the kvault.
+
+```http request
+// GET https://api.kamino.finance/kvaults/:vaultPubkey/allocation-transactions
+```
+
+Example request:
+
+- https://api.kamino.finance/kvaults/A1USdzqDHmw5oz97AkqAGLxEQZfFjASZFuy4T6Qdvnpo/allocation-transactions
+
+Example response:
+
+```json
+[
+  {
+    "createdOn": "2025-07-04T11:52:30.000Z",
+    "tx": "5Gqv3h8QsWASLgkXRx73fgj9bK4ejYrbG6h3qL95MiEEEJPSbBmfTjp4cFdLvwe9DNKyteZWCwLT4h1KiNicUrFi",
+    "market": "DxXdAyU3kCjnyggvHmY5nAwg5cRbbmdyX3npfDMjjMek",
+    "reserve": "Ga4rZytCpq1unD4DbEJ5bkHeUz9g3oh9AAFEi6vSauXp",
+    "solPrice": "150.50102776",
+    "tokenPrice": "0.99995575",
+    "tokenAmount": "86378.893083"
+  },
+  {
+    "createdOn": "2025-07-04T11:52:29.000Z",
+    "tx": "3CeKwuyZkikwCMAPG1HtAjkbgnEQADbK89kQnKQrgumZcBcXtZJhhmsMGxJKzwwZmHVUi89A4fcGMRFuMXYR8ibS",
+    "market": "ByYiZxp8QrdN9qbdtaAiePN8AAr3qvTPppNJDpf5DVJ5",
+    "reserve": "9TD2TSv4pENb8VwfbVYg25jvym7HN6iuAR6pFNSrKjqQ",
+    "solPrice": "150.50102776",
+    "tokenPrice": "0.99995575",
+    "tokenAmount": "-5985.323256"
+  }
+]
+```
+
 #### Get kvault metrics
 
 ```http request
@@ -3016,6 +3055,7 @@ GET https://api.kamino.finance/kvaults/:vaultPubkey/metrics
 ```
 
 Example request:
+
 - https://api.kamino.finance/kvaults/6grCt9ChoQEJrR2e118z78PerPjF9GckYHZNnKDMfBKt/metrics
 
 Example response:
@@ -3061,6 +3101,7 @@ GET https://api.kamino.finance/kvaults/:vaultPubkey/metrics/history?start={date}
 ```
 
 Example request:
+
 - https://api.kamino.finance/kvaults/6grCt9ChoQEJrR2e118z78PerPjF9GckYHZNnKDMfBKt/metrics/history?start=2024-10-20T00%3A00Z&end=2024-10-22T00%3A00Z'
 
 Example response:
@@ -3068,16 +3109,776 @@ Example response:
 ```json
 [
   {
-    "timestamp": "2024-10-20T11:30:00.000Z",
-    "tvl": "4.99758925",
-    "apy": "0.060121900226019375"
+    "timestamp": "2025-07-03T00:00:00.000Z",
+    "tvl": "19863016.33455871687624385919504308668070354518022856",
+    "solTvl": "130414.84862826603367716431425678083232921174232297",
+    "apy": "0.10686463258588239124",
+    "sharePrice": "1.01092897998356834377701965316659046348",
+    "interest": "97626.92618552135357358024959884403386949",
+    "interestUsd": "97613.94679985786040507093812842421815332",
+    "interestSol": "673.3738062658288612361006813770589558212"
   },
   {
-    "timestamp": "2024-10-20T11:35:00.000Z",
-    "tvl": "5.23758925",
-    "apy": "0.070121900226019375"
+    "timestamp": "2025-07-04T00:00:00.000Z",
+    "tvl": "22041935.58219547470375869285618175104470167111288875",
+    "solTvl": "147463.28018348567915855624912056398537646913458751",
+    "apy": "0.0534769079857769307",
+    "sharePrice": "1.01096795109741679254322611096254024563",
+    "interest": "98719.25182826413468093582551815503720236",
+    "interestUsd": "98706.1944166449775965473653726282456157",
+    "interestSol": "680.5560738141290511200645422259630228634"
   }
 ]
+```
+
+#### Get kvault allocation volume history
+
+```http request
+GET https://api.kamino.finance/kvaults/:vaultPubkey/allocation-volume/history?start={date}&end=${date}
+```
+
+Example request:
+
+- https://api.kamino.finance/kvaults/A1USdzqDHmw5oz97AkqAGLxEQZfFjASZFuy4T6Qdvnpo/allocation-volume/history?env=mainnet-beta&start=2025-05-05T00%3A00Z&end=2025-07-04T15%3A00Z
+
+Example response:
+
+```json
+[
+  {
+    "timestamp": "2025-07-02T00:00:00.000Z",
+    "volumeUsd": "20067545.566658128482"
+  },
+  {
+    "timestamp": "2025-07-03T00:00:00.000Z",
+    "volumeUsd": "35383449.19119728189281"
+  },
+  {
+    "timestamp": "2025-07-04T00:00:00.000Z",
+    "volumeUsd": "16858251.41688073015361"
+  }
+]
+```
+
+#### Get user vault metrics history
+
+Get timeseries of usd/sol/interest/apy... of specific kvault user position.
+
+```http request
+GET https://api.kamino.finance/kvaults/:vaultPubkey/users/:userPubkey/metrics/history?start={date}&end=${date}
+```
+
+Example request:
+
+- https://api.kamino.finance/kvaults/GJZhNhQHFn3NpLhPgQjeyivNzAn548rGYg4EcuaxeCEf/users/sadmBTQm5HJsyzWHEjV4YwG9CiahZKVDVqAyS4Wx1zH/metrics/history?start=2024-10-20T00%3A00Z&end=2024-10-22T00%3A00Z'
+
+Example response:
+
+```json
+[
+  {
+    "createdOn": "2025-01-14T11:53:54.734Z",
+    "sharesAmount": "1",
+    "usdAmount": "1.001009996801491595755991446853909208564",
+    "solAmount": "0.005352941291953978820943628975408093773161",
+    "apy": "0.07502216110843518",
+    "cumulativeInterestEarned": "0",
+    "cumulativeInterestEarnedUsd": "0",
+    "cumulativeInterestEarnedSol": "0",
+    "interestEarnedPerSecond": "0",
+    "interestEarnedPerSecondUsd": "0",
+    "interestEarnedPerSecondSol": "0"
+  },
+  {
+    "createdOn": "2025-01-14T11:54:25.530Z",
+    "sharesAmount": "1",
+    "usdAmount": "1.001004212610976305808977819266756417541",
+    "solAmount": "0.005350380274689194798426453878491338313099",
+    "apy": "0.07502220627483847",
+    "cumulativeInterestEarned": "0.000000002024844825466749284216827600944849020349",
+    "cumulativeInterestEarnedUsd": "0.00000000202470104123569289035015536401690592662",
+    "cumulativeInterestEarnedSol": "0.00000000001082205287120021365776673941575854315707",
+    "interestEarnedPerSecond": "0.00000000006575025410659661267230153856437081675242",
+    "interestEarnedPerSecondUsd": "0.00000000006574558518105250324683567843211736078072",
+    "interestEarnedPerSecondSol": "0.0000000000003514109907520526580023154776522543481129"
+  }
+]
+```
+
+#### Get user total metrics history
+
+Get timeseries of total usd/sol/interest/apy of all user kvault positions.
+
+```http request
+GET https://api.kamino.finance/kvaults/users/:userPubkey/metrics/history?start={date}&end=${date}
+```
+
+Example request:
+
+- https://api.kamino.finance/kvaults/users/sadmBTQm5HJsyzWHEjV4YwG9CiahZKVDVqAyS4Wx1zH/metrics/history?start=2024-10-20T00%3A00Z&end=2024-10-22T00%3A00Z'
+
+Example response:
+
+```json
+[
+  {
+    "createdOn": "2025-01-14T11:53:41.210Z",
+    "usdAmount": "3.289742433439577096054433205125205428826",
+    "solAmount": "0.01759203021760035613791855718659833263546",
+    "weightedApy": "0.04573439694192186076452675960806281533141",
+    "cumulativeInterestEarnedUsd": "0",
+    "cumulativeInterestEarnedSol": "0",
+    "interestEarnedPerSecondUsd": "0",
+    "interestEarnedPerSecondSol": "0"
+  },
+  {
+    "createdOn": "2025-01-14T11:54:25.530Z",
+    "usdAmount": "3.289908683294689302333866319938107452865",
+    "solAmount": "0.01758460384368975125597048731253291655472",
+    "weightedApy": "0.04590131297089078620453886143250344888991",
+    "cumulativeInterestEarnedUsd": "0.00000007792300015875231989706197228607687055565",
+    "cumulativeInterestEarnedSol": "0.0000000004164994290149102036996178990966197185186",
+    "interestEarnedPerSecondUsd": "0.000000002530296147511115725938296013257035461894",
+    "interestEarnedPerSecondSol": "0.00000000001352446515829686334893879082828573239386"
+  }
+]
+```
+
+#### Get user vault pnl
+
+```http request
+GET https://api.kamino.finance/kvaults/:vaultPubkey/users/:userPubkey/pnl
+```
+
+Example request:
+
+- https://api.kamino.finance/kvaults/GJZhNhQHFn3NpLhPgQjeyivNzAn548rGYg4EcuaxeCEf/users/sadmBTQm5HJsyzWHEjV4YwG9CiahZKVDVqAyS4Wx1zH/pnl
+
+Example response:
+
+```json
+{
+  "totalCostBasis": {
+    "token": "1.020063426210193217882166040928",
+    "sol": "0.025288434916229183793264807637",
+    "usd": "6.000060406018646063098648036787"
+  },
+  "totalPnl": {
+    "token": "4.991144525511436482070882061898",
+    "sol": "-0.00173901651987720818426570281",
+    "usd": "0.011449308342160062665337709055"
+  }
+}
+```
+
+#### Get user vault pnl history
+
+```http request
+GET https://api.kamino.finance/kvaults/:vaultPubkey/users/:userPubkey/pnl/history
+```
+
+Example request:
+
+- https://api.kamino.finance/kvaults/GJZhNhQHFn3NpLhPgQjeyivNzAn548rGYg4EcuaxeCEf/users/sadmBTQm5HJsyzWHEjV4YwG9CiahZKVDVqAyS4Wx1zH/pnl/history
+
+Example response:
+
+```json
+{
+  "history": [
+    {
+      "timestamp": "2025-01-15T10:04:43.000Z",
+      "type": "buy",
+      "position": "0.999965",
+      "quantity": "0.999965",
+      "tokenPrice": {
+        "token": "0.99999698",
+        "sol": "189.10328327",
+        "usd": "1"
+      },
+      "sharePrice": {
+        "token": "1.000098429655231150972450076681",
+        "sol": "0.005288620017929811336661590793",
+        "usd": "1.000095409357973592174374139882"
+      },
+      "investment": {
+        "token": "1.000063426210193217882166040928",
+        "sol": "0.005288434916229183793264807637",
+        "usd": "1.000060406018646063098648036787"
+      },
+      "costBasis": {
+        "token": "1.000063426210193217882166040928",
+        "sol": "0.005288434916229183793264807637",
+        "usd": "1.000060406018646063098648036787"
+      },
+      "realizedPnl": {
+        "token": "0",
+        "sol": "0",
+        "usd": "0"
+      },
+      "pnl": {
+        "token": "0",
+        "sol": "0",
+        "usd": "0"
+      },
+      "positionValue": {
+        "token": "1.000063426210193217882166040928",
+        "sol": "0.005288434916229183793264807637",
+        "usd": "1.000060406018646063098648036787"
+      }
+    },
+    {
+      "timestamp": "2025-01-14T22:34:04.000Z",
+      "type": "sell",
+      "position": "5.999965",
+      "quantity": "5",
+      "tokenPrice": {
+        "token": "250",
+        "sol": "250",
+        "usd": "1"
+      },
+      "sharePrice": {
+        "token": "0.004",
+        "sol": "0.004",
+        "usd": "1"
+      },
+      "investment": {
+        "token": "1.020063426210193217882166040928",
+        "sol": "0.025288434916229183793264807637",
+        "usd": "6.000060406018646063098648036787"
+      },
+      "costBasis": {
+        "token": "1.020063426210193217882166040928",
+        "sol": "0.025288434916229183793264807637",
+        "usd": "6.000060406018646063098648036787"
+      },
+      "realizedPnl": {
+        "token": "0",
+        "sol": "0",
+        "usd": "0"
+      },
+      "pnl": {
+        "token": "-0.996063566210193217882166040928",
+        "sol": "-0.001288574916229183793264807637",
+        "usd": "-0.000095406018646063098648036787"
+      },
+      "positionValue": {
+        "token": "0.02399986",
+        "sol": "0.02399986",
+        "usd": "5.999965"
+      }
+    },
+    {
+      "timestamp": 1737712924618,
+      "type": "mark-to-market",
+      "position": "5.999965",
+      "quantity": "5.999965",
+      "tokenPrice": {
+        "token": "0.99998362",
+        "sol": "264.07338454",
+        "usd": "1"
+      },
+      "sharePrice": {
+        "token": "1.0019723663536509348902348102",
+        "sol": "0.003794233015158408519892261112",
+        "usd": "1.001955954046290062087921308153"
+      },
+      "investment": {
+        "token": "1.020063426210193217882166040928",
+        "sol": "0.025288434916229183793264807637",
+        "usd": "6.000060406018646063098648036787"
+      },
+      "costBasis": {
+        "token": "1.020063426210193217882166040928",
+        "sol": "0.025288434916229183793264807637",
+        "usd": "6.000060406018646063098648036787"
+      },
+      "realizedPnl": {
+        "token": "0",
+        "sol": "0",
+        "usd": "0"
+      },
+      "pnl": {
+        "token": "4.991735702878890013676521662053",
+        "sol": "-0.002523169623434263218209437191",
+        "usd": "0.01164024980070268927670673489"
+      },
+      "positionValue": {
+        "token": "6.011799129089083231558687702982",
+        "sol": "0.022765265292794920575055370446",
+        "usd": "6.011700655819348752375354771677"
+      }
+    }
+  ],
+  "totalPnl": {
+    "token": "4.991735702878890013676521662053",
+    "sol": "-0.002523169623434263218209437191",
+    "usd": "0.01164024980070268927670673489"
+  },
+  "totalCostBasis": {
+    "token": "1.020063426210193217882166040928",
+    "sol": "0.025288434916229183793264807637",
+    "usd": "6.000060406018646063098648036787"
+  }
+}
+```
+
+#### Vault shares token (Kvault)
+
+You may use the `env` query param for all the methods specified below (`mainnet-beta`[default],`devnet`,`localnet`,`testnet`).
+
+All mints must be valid kVault share token mints.
+
+##### Get kVault token metadata for mint
+
+```http request
+// GET https://api.hubbleprotocol.io/kvault-tokens/:mint/metadata
+GET https://api.hubbleprotocol.io/kvault-tokens/BabJ4KTDUDqaBRWLFza3Ek3zEcjXaPDmeRGRwusQyLPS/metadata
+```
+
+##### Get kVault token image for mint
+
+```http request
+// GET https://api.hubbleprotocol.io/kvault-tokens/:mint/metadata/image.svg
+GET https://api.hubbleprotocol.io/kvault-tokens/BabJ4KTDUDqaBRWLFza3Ek3zEcjXaPDmeRGRwusQyLPS/metadata/image.svg
+
+
+### Limo
+
+#### Get all limo user transactions
+
+Get all instructions for the specified Limo user (maker).
+
+```http request
+// GET https://api.kamino.finance/limo/makers/:makerPubkey/transactions?env={cluster}&in={inTokenMint}&out={outTokenMint}
+```
+
+Query params:
+
+- env: solana cluster, e.g. `"mainnet-beta" (default) | "devnet"`
+- in: input token mint of the order, e.g. `So11111111111111111111111111111111111111112`
+- out: output token mint of the order, e.g. `EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v`
+
+Example requests:
+
+- Fetch all txs for all pairs: https://api.kamino.finance/limo/makers/7bfsDRVpujyxzYcNWHnN3ietYb5XEsAidgdc9cintAuj/transactions?env=mainnet-beta
+- Fetch txs for SOL/USDC pair: https://api.kamino.finance/limo/makers/CBd9omWgziKgBhmAqrGREDJqsSvM1HrarEMzE89zawMa/transactions?env=mainnet-beta&in=So11111111111111111111111111111111111111112&out=EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v
+- Fetch txs for SOL input token and any output token: https://api.kamino.finance/limo/makers/CBd9omWgziKgBhmAqrGREDJqsSvM1HrarEMzE89zawMa/transactions?env=mainnet-beta&in=So11111111111111111111111111111111111111112
+
+Example response:
+
+```json
+[
+  {
+    "transactionSignature": "3DA1t96dsHaTjvDm9w6Z1dnBL5G21uq21wYK1mYxbDaBfxQnau2yCEkinn5LoaJPW3Ud12iPBQdfj7cuNtXzJ7qQ",
+    "ixName": "closeOrderAndClaimTip",
+    "order": "Bh5fXLmfh9WNZPfL3sp1RCa7itrV1BXQGoJcqRfkz3Hh",
+    "orderStatus": "Cancelled",
+    "orderType": "ExactIn",
+    "updatedOn": "2024-11-19T19:12:22.000Z",
+    "inMint": "So11111111111111111111111111111111111111112",
+    "outMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+    "initialInAmount": "0.01",
+    "remainingInAmount": "0.01",
+    "expectedOutAmount": "2.41",
+    "filledOutAmount": "0",
+    "numberOfFills": "0",
+    "totalFilled": "0",
+    "orderPriceInOut": "0.00414937759336099585",
+    "orderPriceOutIn": "241",
+    "executionPriceInOut": "0",
+    "executionPriceOutIn": "0",
+    "surplus": "0",
+    "tipAmount": "0",
+    "networkFee": "0.001138901",
+    "solPrice": "240.123"
+  },
+  {
+    "transactionSignature": "5Szg5BFsF8XCRCCN6NobRzSxBqoKEJXzkFs9L9473GRN21fm9d5zsdHpT4saPDgjuj4gxRW7CrJC3aFgvPDYdEAN",
+    "ixName": "createOrder",
+    "order": "Bh5fXLmfh9WNZPfL3sp1RCa7itrV1BXQGoJcqRfkz3Hh",
+    "orderStatus": "Active",
+    "orderType": "ExactIn",
+    "updatedOn": "2024-11-19T19:12:22.000Z",
+    "inMint": "So11111111111111111111111111111111111111112",
+    "outMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+    "initialInAmount": "0.01",
+    "remainingInAmount": "0.01",
+    "expectedOutAmount": "2.41",
+    "filledOutAmount": "0",
+    "numberOfFills": "0",
+    "totalFilled": "0",
+    "orderPriceInOut": "0.00414937759336099585",
+    "orderPriceOutIn": "241",
+    "executionPriceInOut": "0",
+    "executionPriceOutIn": "0",
+    "surplus": "0",
+    "tipAmount": "0",
+    "networkFee": "0.001125865",
+    "solPrice": "240.123"
+  }
+]
+```
+
+#### Get limo maker metrics
+
+```http request
+// GET https://api.kamino.finance/limo/makers/:makerPubkey/metrics
+```
+
+Example request:
+
+- https://api.kamino.finance/limo/makers/CBd9omWgziKgBhmAqrGREDJqsSvM1HrarEMzE89zawMa/metrics
+
+Example response:
+
+```json
+{
+  "totalVolumeUsd": "500.123",
+  "totalOrders": 3,
+  "totalTipsSol": "0.000043296",
+  "totalTipsUsd": "1.24585",
+  "totalSurplusUsd": "38.385940",
+  "favoritePair": {
+    "inTokenPubkey": "So11111111111111111111111111111111111111112",
+    "outTokenPubkey": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+    "tradeCount": 6
+  }
+}
+```
+
+#### Get limo maker pair metrics
+
+```http request
+// GET https://api.kamino.finance/limo/makers/:makerPubkey/metrics/pair?in={inTokenMint}&out={outTokenMint}
+```
+
+Query params:
+
+- in: input token mint of the order, e.g. `So11111111111111111111111111111111111111112`
+- out: output token mint of the order, e.g. `EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v`
+
+Example request:
+
+- https://api.kamino.finance/limo/makers/CBd9omWgziKgBhmAqrGREDJqsSvM1HrarEMzE89zawMa/metrics/pair?in=So11111111111111111111111111111111111111112&out=EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v
+
+Example response:
+
+```json
+{
+  "totalVolumeUsd": "100.123",
+  "totalOrders": 2,
+  "totalTipsSol": "0.000043296",
+  "totalTipsUsd": "0.3248",
+  "totalSurplusUsd": "0.1"
+}
+```
+
+#### Get limo global metrics
+
+Get metrics for all trades
+
+```http request
+// GET https://api.kamino.finance/limo/metrics
+```
+
+Example request:
+
+- https://api.kamino.finance/limo/metrics
+
+Example response:
+
+```json
+{
+  "allTime": {
+    "totalVolumeUsd": "32179.204554150009005121121",
+    "totalSurplus": "0.01794400389018700094",
+    "totalSurplusUsd": "4.3134619210239461983798395146",
+    "totalTipAmount": "0.002224553",
+    "totalTipAmountUsd": "0.5417640091257365",
+    "totalTrades": "10"
+  },
+  "daily": {
+    "totalVolumeUsd": "1.598927244",
+    "totalSurplus": "0",
+    "totalSurplusUsd": "0",
+    "totalTipAmount": "0.000730568",
+    "totalTipAmountUsd": "0.182642",
+    "totalTrades": "1"
+  }
+}
+```
+
+#### Get limo pair metrics
+
+Get metrics for a specific token pair
+
+```http request
+// GET https://api.kamino.finance/limo/metrics/pair?in={inTokenMint}&out={outTokenMint}
+```
+
+Query params:
+
+- in: input token mint of the order, e.g. `So11111111111111111111111111111111111111112`
+- out: output token mint of the order, e.g. `EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v`
+
+Example request:
+
+- https://api.kamino.finance/limo/metrics/pair?in=So11111111111111111111111111111111111111112&out=EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v
+
+Example response:
+
+```json
+{
+  "allTime": {
+    "totalVolumeUsd": "32179.204554150009005121121",
+    "totalSurplus": "0.01794400389018700094",
+    "totalSurplusUsd": "4.3134619210239461983798395146",
+    "totalTipAmount": "0.002224553",
+    "totalTipAmountUsd": "0.5417640091257365",
+    "totalTrades": "10"
+  },
+  "daily": {
+    "totalVolumeUsd": "1.598927244",
+    "totalSurplus": "0",
+    "totalSurplusUsd": "0",
+    "totalTipAmount": "0.000730568",
+    "totalTipAmountUsd": "0.182642",
+    "totalTrades": "1"
+  }
+}
+```
+
+#### Get limo weekly leaderboard metrics
+
+```http request
+// GET https://api.kamino.finance/limo/leaderboard/weekly/metrics
+```
+
+Example request:
+
+- https://api.kamino.finance/limo/leaderboard/weekly/metrics
+
+Example response:
+
+```json
+{
+  "weeklyVolumeUsd": "1.598927244",
+  "weeklyTickets": "0.001598927244",
+  "weeklyTipsUsd": "0.182642",
+  "weeklySurplusUsd": "0"
+}
+```
+
+#### Get limo weekly leaderboard
+
+```http request
+GET https://api.kamino.finance/limo/weekly/leaderboard?offset={offset}&limit=${limit}
+```
+
+Example requests:
+
+- get first 20 leaderboard ranks: https://api.kamino.finance/limo/weekly/leaderboard?offset=0&limit=20
+- get leaderboard ranks between 100-200: https://api.kamino.finance/limo/weekly/leaderboard?offset=100&limit=100
+
+To implement pagination fetch the first page (offset = 0, limit = 20 for example) and then look at the property `totalLeaderboardCount` to calculate the amount of pages you will display.
+
+Example response:
+
+```json
+{
+  "totalLeaderboardCount": 9,
+  "leaderboard": [
+    {
+      "rank": 1,
+      "maker": "tsTSFNQsjqKArV5SvtEVePkZ6Crbkf65KhgmniyrFkV",
+      "volumeUsd": "23.57484499976425155",
+      "tickets": "0.02357484499976425155",
+      "tipsUsd": "0",
+      "surplusUsd": "0"
+    },
+    {
+      "rank": 2,
+      "maker": "4RHjaQ2c6mFVsjyu7nR4o69QTVn8hS6yn4WTspwR2R19",
+      "volumeUsd": "1.59892724398401072756",
+      "tickets": "0.00159892724398401073",
+      "tipsUsd": "0.1754275283464144",
+      "surplusUsd": "0"
+    },
+    {
+      "rank": 3,
+      "maker": "AoDMpV5zPYP9trk6d52ZU5nqpYRKHtHYmnoABxapDXQR",
+      "volumeUsd": "0.09549704199904502958",
+      "tickets": "0.00009549704199904502958",
+      "tipsUsd": "0.0044768876250952",
+      "surplusUsd": "0.000000003151099999968489"
+    }
+  ]
+}
+```
+
+#### Get last 500 limo trades
+
+Get last 500 limo trades (fills)
+
+```http request
+// GET https://api.kamino.finance/limo/trades?in={inTokenMint:optional}&out={outTokenMint:optional}
+```
+
+Query params:
+
+- in (optional): input token mint of the order, e.g. `So11111111111111111111111111111111111111112`
+- out (optional): output token mint of the order, e.g. `EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v`
+
+If no query params are used, it will return trades for all pairs.
+
+Example request:
+
+- Get all trades: https://api.kamino.finance/limo/trades
+- Get SOL -> USDC trades: https://api.kamino.finance/limo/trades?in=So11111111111111111111111111111111111111112&out=EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v
+
+Example response:
+
+```json
+[
+  {
+    "updatedOn": "2024-11-26T09:30:33.000Z",
+    "inMint": "So11111111111111111111111111111111111111112",
+    "outMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+    "sizeUsd": "23.94585489",
+    "tipAmountUsd": "0.001",
+    "surplusUsd": "0.01",
+    "order": "FqWpdGoN1CS21FVQG4weL9ndon9cfzhWDZmrScfALN8x"
+  },
+  {
+    "updatedOn": "2024-11-22T14:44:18.000Z",
+    "inMint": "So11111111111111111111111111111111111111112",
+    "outMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+    "sizeUsd": "119.72927445",
+    "tipAmountUsd": "0.0021632847358122",
+    "surplusUsd": "0.48982",
+    "order": "G1VtPA6y7EMWQSgRUv13L9LSTSgFtcZYij8cXNQddXue"
+  }
+]
+```
+
+#### Bulk get Limo transactions
+
+This endpoint is not open to the public, it is private for analytical purposes only, add authorization headers to the request.
+
+```http request
+POST https://api.kamino.finance/limo/transactions
+```
+
+```json
+{
+  "start": "2024-01-01T00:00Z",
+  "end": "2024-01-02T00:00Z",
+  "paginationToken": ""
+}
+```
+
+Example cURL request:
+
+```bash
+curl --location 'https://api.kamino.finance/limo/transactions' --header 'Content-Type: application/json' --header 'Authorization: Basic ENTER_CREDENTIALS' --data '{
+    "start": "2024-01-01",
+    "end": "2024-01-02",
+    "paginationToken": ""
+}'
+```
+
+Example Python request:
+
+```python
+import requests
+import json
+
+url = "https://api.kamino.finance/limo/transactions"
+
+payload = json.dumps({
+  "start": "2024-01-01",
+  "end": "2024-01-02",
+  "paginationToken": ""
+})
+headers = {
+  'Content-Type': 'application/json',
+  'Authorization': 'Basic ADD-CREDENTIALS-HERE'
+}
+
+response = requests.request("POST", url, headers=headers, data=payload)
+
+print(response.text)
+```
+
+Example response:
+
+```json
+{
+  "result": [
+    {
+      "maker": "DAnimibJrqNQd8NEjEWKwcB8VZzTKT3DWvFvfHjufDF",
+      "taker": null,
+      "transactionSignature": "3DYGcEUzzzyYXX7sHEM5Ras7CDzdRdEnMdzEjayqZXJMH6a7KGqaV8jw6SN15PAkM2pPBhqGT7N5DRSDXhyqcfUL",
+      "ixName": "createOrder",
+      "initialInAmount": "0.001",
+      "remainingInAmount": "0.001",
+      "expectedOutAmount": "0.000004062",
+      "cumulativeFilledOutAmount": "0",
+      "lastFilledOutAmount": "0",
+      "numberOfFills": "0",
+      "volumeUsd": "0",
+      "fillRatio": "0",
+      "orderPriceInOut": "246.1841457410142787",
+      "orderPriceOutIn": "0.004062",
+      "executionPriceInOut": "0",
+      "executionPriceOutIn": "0",
+      "surplus": "0",
+      "tipAmount": "0",
+      "networkFee": "0.000288189",
+      "solPrice": "0",
+      "inTokenPrice": "0",
+      "outTokenPrice": "0",
+      "updatedOn": "2024-11-28T12:01:25.000Z",
+      "orderStatus": "Active",
+      "inMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "outMint": "So11111111111111111111111111111111111111112",
+      "orderPubkey": "BvaSkA7RN3XW3ApxxouZtZNCb6yKdBtSir3xncCsCMCV",
+      "orderType": "ExactIn"
+    },
+    {
+      "maker": "DAnimibJrqNQd8NEjEWKwcB8VZzTKT3DWvFvfHjufDF",
+      "taker": "76qh9UEKv8We4Um5bznSPvn2jkNrckq2hKeNQt8JNNKQ",
+      "transactionSignature": "5tPfMkqgZd6QA8sCnR9mmcnFMu9z1qCLwevUmkAszN61QxPMepSdBeEX39pZqKJvhAXtNi2A7SKgQrJiQSdv1WQt",
+      "ixName": "takeOrder",
+      "initialInAmount": "0.001",
+      "remainingInAmount": "0",
+      "expectedOutAmount": "0.000004062",
+      "cumulativeFilledOutAmount": "0.000004062",
+      "lastFilledOutAmount": "0.000004062",
+      "numberOfFills": "1",
+      "volumeUsd": "0",
+      "fillRatio": "1",
+      "orderPriceInOut": "246.1841457410142787",
+      "orderPriceOutIn": "0.004062",
+      "executionPriceInOut": "246.1841457410142787",
+      "executionPriceOutIn": "0.004062",
+      "surplus": "0",
+      "tipAmount": "0.000000047",
+      "networkFee": "0.00025",
+      "solPrice": "0",
+      "inTokenPrice": "0",
+      "outTokenPrice": "0",
+      "updatedOn": "2024-11-28T13:03:36.000Z",
+      "orderStatus": "Filled",
+      "inMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "outMint": "So11111111111111111111111111111111111111112",
+      "orderPubkey": "HtT3sFFRC1ScVzxLfXURu3sRha8TBwZbuYVrV8EBSn18",
+      "orderType": "ExactIn"
+    }
+  ],
+  "paginationToken": "eyJsYXN0SWQiOjEwNjU3fQ=="
+}
 ```
 
 ### Limo
