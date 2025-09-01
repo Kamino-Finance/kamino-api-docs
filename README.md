@@ -4303,3 +4303,90 @@ Example response:
   "paginationToken": "eyJsYXN0SWQiOjEwNjU3fQ=="
 }
 ```
+
+#### KSwap
+
+### Bulk get Swap transactions
+
+This endpoint is not open to the public, it is private for analytical purposes only, add authorization headers to the request.
+
+```http request
+POST https://api.kamino.finance/kamino-swap/transactions
+```
+
+```json
+{
+  "start": "2024-01-01T00:00Z",
+  "end": "2024-01-02T00:00Z",
+  "paginationToken": ""
+}
+```
+
+#### Example cURL request:
+
+```bash
+curl --location 'https://api.kamino.finance/kamino-swap/transactions' --header 'Content-Type: application/json' --header 'Authorization: Basic ENTER_CREDENTIALS' --data '{
+    "start": "2024-01-01",
+    "end": "2024-01-02",
+    "paginationToken": ""
+}'
+```
+
+#### Example Python request:
+
+```python
+import requests
+import json
+
+url = "https://api.kamino.finance/kamino-swap/transactions"
+
+payload = json.dumps({
+  "start": "2024-01-01",
+  "end": "2024-01-02",
+  "paginationToken": ""
+})
+headers = {
+  'Content-Type': 'application/json',
+  'Authorization': 'Basic ADD-CREDENTIALS-HERE'
+}
+
+response = requests.request("POST", url, headers=headers, data=payload)
+
+print(response.text)
+```
+
+#### Example response:
+
+```json
+{
+  "result": [
+    {
+      "transactionSignature": "5NRXmm1bTK45xaJgc16Rxrrf8UvQxbYnR4sdZ5wAcoHQo4Sysy9JYejDeJv3dG79Q2eckLPvxHvfdKPPhmRyxu3g",
+      "transactionFee": "0.00002175",
+      "owner": "ARygwR6WBPvatQ2bBrSyytsyBgqrRDwxEuANWSSydfXW",
+      "inMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "outMint": "So11111111111111111111111111111111111111112",
+      "programAccount": "PytERJFhAKuNNuaiXkApLfWzwNwSNDACpigT3LwQfou",
+      "updatedOn": "2025-03-20T09:37:43.000Z",
+      "inAmount": "10",
+      "outAmount": "0.074781088",
+      "referrer": null,
+      "searcher": "H8FpJ3XvXDoAjBSwEZECteog4hNVJR63G6fWKTPv1R6k"
+    },
+    {
+      "transactionSignature": "2v1KJctTmvam9uCeVNfNC7w1pQtiebqTXr5A3KH9LYSvdqgfBHwkWzvs2jLfJ8om11AMoge1DBMTQswc6PkcNZ1i",
+      "transactionFee": "0.000025125",
+      "owner": "BkfR7rREgvDbDQ7TtLSLpmsFAiV4TWxAYwzocPXaLQ2f",
+      "inMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "outMint": "So11111111111111111111111111111111111111112",
+      "programAccount": "PytERJFhAKuNNuaiXkApLfWzwNwSNDACpigT3LwQfou",
+      "updatedOn": "2025-03-20T10:31:51.000Z",
+      "inAmount": "1",
+      "outAmount": "0.007638043",
+      "referrer": "H8FpJ3XvXDoAjBSwEZECteog4hNVJR63G6fWKTPv1R6k",
+      "searcher": null
+    }
+  ],
+  "paginationToken": "eyJsYXN0SWQiOjEwNjU3fQ=="
+}
+```
